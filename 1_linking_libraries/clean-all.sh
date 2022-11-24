@@ -1,3 +1,4 @@
+#!/bin/sh
 # clean library
 cd lib/static
 make clean

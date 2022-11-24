@@ -1,3 +1,4 @@
+#!/bin/sh
 # Build library
 cd lib/static
 make all
