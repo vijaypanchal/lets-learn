@@ -1,0 +1,5 @@
+*.o
+*.so
+*.a
+sample-app-static 
+sample-app-dynamic
