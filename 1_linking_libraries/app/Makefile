@@ -12,8 +12,8 @@ sample-app-static.o: sample-app.c
 sample-app-dynamic: sample-app-dynamic.o
 	$(CC) -o $@ $^ -L../lib/dynamic -ltest
 
-sample-app-static: sample-app-static.o
-	$(CC) -static -o $@ $^ -L../lib/static -ltest	
+sample-app-static: sample-app-static.o	
+	$(CC) -o $@ $^ -L../lib/static -ltest
 
 clean:
 	rm -f *.o
