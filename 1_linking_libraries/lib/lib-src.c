@@ -1,3 +1,3 @@
-int find_squre(int n){
+int find_square (int n){
     return n*n;
 }
