@@ -1,5 +1,5 @@
 # lets-learn
 Let's learn
 
-## 1. Linking Libraries:[here](lets-learn/1_linking_libraries)
+## 1. Linking Libraries: [Here](1_linking_libraries/README.md)
 
