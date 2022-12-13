@@ -16,7 +16,12 @@
             $ arm-linux-gnueabi-gcc --version
             arm-linux-gnueabi-gcc (Debian 10.2.1-6) 10.2.1 20210110
 
-## 
+## Compile:
+
+
+
+
+
 
 
 

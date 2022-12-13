@@ -41,14 +41,27 @@ int main(){
 
     clock_t start = clock();
     for(int i = 0; i < PROC_LOOP ; i++){
-        lib_api_process_data(input, &slope, &constant, output, size);
+        lib_api_process_data_c(input, &slope, &constant, output, size);
     }
     clock_t stop = clock();
 
     clock_t diff = (stop - start);
     double cpu_time_used = ((double) diff) / CLOCKS_PER_SEC; 
     printf("\nStart -> %u Stop-> %u Diff-> %u", start, stop, diff);
-    printf("\t Time taken %f seconds to execute \n", cpu_time_used);
+    printf("\nlib_api_process_data_f : Time taken %f seconds to execute \n", cpu_time_used);
+
+#if ARM_NEON == 1
+    clock_t start_i = clock();
+    for(int i = 0; i < PROC_LOOP ; i++){
+        lib_api_process_data_intrinsics(input, &slope, &constant, output, size);
+    }
+    clock_t stop_i = clock();
+
+    clock_t diff_i = (stop_i - start_i);
+    double cpu_time_used_i = ((double) diff_i) / CLOCKS_PER_SEC; 
+    printf("\nStart -> %u Stop-> %u Diff-> %u", start_i, stop_i, diff_i);
+    printf("\nlib_api_process_data_intrinsics -> Time taken %f seconds to execute \n", cpu_time_used_i);
+#endif
 
 #ifndef STATIC_ALLOC    
     delete [] input;

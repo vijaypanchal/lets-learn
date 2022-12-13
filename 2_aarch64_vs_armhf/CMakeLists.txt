@@ -10,6 +10,16 @@ else()
     set(CMAKE_C_COMPILER gcc)
     set(CMAKE_CXX_COMPILER g++)    
 endif()
+
+if(NEON)
+    if(ARMHF) 
+        set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3 -DARM_NEON=1 -march=armv7-a+neon-vfpv4")
+    else()
+        set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3 -DARM_NEON=1 -march=armv8.1-a+simd")
+    endif()    
+else()
+    set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3")
+endif()
     
 # project name and language
 project(cmake-compiler-flags LANGUAGES CXX)
