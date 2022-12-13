@@ -10,7 +10,7 @@
 #define STATIC_ALLOC
 #undef STATIC_ALLOC
 #define DATA_SIZE   10*1000
-#define PROC_LOOP   1000*1000 
+#define PROC_LOOP   10*1000 
 
 #ifdef STATIC_ALLOC
 float input[DATA_SIZE] = {0};
@@ -34,8 +34,8 @@ int main(){
     float *output = new float[size]{0};
     float *output_i = new float[size]{0};
 #endif
-    int slope = random_int(DATA_RANGE_MIN, DATA_RANGE_MAX);
-    int constant = random_int(DATA_RANGE_MIN, DATA_RANGE_MAX);
+    float slope = random_int(DATA_RANGE_MIN, DATA_RANGE_MAX);
+    float constant = random_int(DATA_RANGE_MIN, DATA_RANGE_MAX);
 
     for(int i = 0; i < size; i++){
         input[i] = random_int(DATA_RANGE_MIN, DATA_RANGE_MAX);        
