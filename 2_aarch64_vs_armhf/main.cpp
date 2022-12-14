@@ -43,7 +43,7 @@ int main(){
 
     clock_t start = clock();
     for(int i = 0; i < PROC_LOOP ; i++){
-        lib_api_process_data_c(input, &slope, &constant, output, size);
+        lib_process_api_c(input, &slope, &constant, output, size);
     }
     clock_t stop = clock();
 
@@ -52,12 +52,12 @@ int main(){
 #ifdef DEBUG_PRINT
     printf("\nStart -> %u Stop-> %u Diff-> %u", start, stop, diff);
 #endif
-    printf("\nlib_api_process_data_f : Time taken %f seconds to execute \n", cpu_time_used);
+    printf("\nlib_process_api_f : Time taken %f seconds to execute \n", cpu_time_used);
 
 #if ARM_NEON == 1
     clock_t start_i = clock();
     for(int i = 0; i < PROC_LOOP ; i++){
-        lib_api_process_data_intrinsics(input, &slope, &constant, output_i, size);
+        lib_process_api_intrinsics(input, &slope, &constant, output_i, size);
     }
     clock_t stop_i = clock();
 
@@ -72,10 +72,10 @@ int main(){
 #ifdef DEBUG_PRINT    
     printf("\nStart -> %u Stop-> %u Diff-> %u", start_i, stop_i, diff_i);
 #endif
-    printf("\nlib_api_process_data_intrinsics -> Time taken %f seconds to execute \n", cpu_time_used_i);
+    printf("\nlib_process_api_intrinsics -> Time taken %f seconds to execute \n", cpu_time_used_i);
     double improvement = (100.0*(cpu_time_used-cpu_time_used_i))/float(cpu_time_used);
     
-    printf("Tntrinsics Performance improvement : %f %c\n",improvement, '%');
+    printf("Intrinsics Performance improvement : %f %c\n",improvement, '%');
 
 #endif
 
