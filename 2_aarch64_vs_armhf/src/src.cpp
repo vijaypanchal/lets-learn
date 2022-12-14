@@ -22,7 +22,7 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
     float32x4_t input_32x4[8];
     float32x4_t output_32x4[8];
     float32x4_t m_32x4 = vld1q_dup_f32(pM);
-    float32x4_t c_32x3 = vld1q_dup_f32(pC);
+    float32x4_t c_32x4 = vld1q_dup_f32(pC);
 
     // 32 Elements in Loop
     while(size >= 32){
@@ -33,7 +33,7 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
             output_32x4[i] = vmulq_f32(input_32x4[i],m_32x4);
         
         for(int i = 0; i < 8 ; i++)
-            output_32x4[i] = vaddq_f32(output_32x4[i],m_32x4);
+            output_32x4[i] = vaddq_f32(output_32x4[i],c_32x4);
         
         for(int i = 0; i < 8 ; i++)
             vst1q_f32(output+i*4,output_32x4[i]);        
@@ -45,25 +45,17 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
 
     // 16 Elements in Loop
     while(size >= 16){
-        input_32x4[0] = vld1q_f32(input);
-        input_32x4[1] = vld1q_f32(input+4);
-        input_32x4[2] = vld1q_f32(input+8);
-        input_32x4[3] = vld1q_f32(input+12);
-
-        output_32x4[0] = vmulq_f32(input_32x4[0],m_32x4);
-        output_32x4[1] = vmulq_f32(input_32x4[1],m_32x4);
-        output_32x4[2] = vmulq_f32(input_32x4[2],m_32x4);
-        output_32x4[3] = vmulq_f32(input_32x4[3],m_32x4);
-
-        output_32x4[0] = vaddq_f32(output_32x4[0],m_32x4);
-        output_32x4[1] = vaddq_f32(output_32x4[1],m_32x4);
-        output_32x4[2] = vaddq_f32(output_32x4[2],m_32x4);
-        output_32x4[3] = vaddq_f32(output_32x4[3],m_32x4);
-
-        vst1q_f32(output,output_32x4[0]);
-        vst1q_f32(output+4,output_32x4[1]);
-        vst1q_f32(output+8,output_32x4[2]);
-        vst1q_f32(output+12,output_32x4[3]);
+        for(int i = 0; i < 4 ; i++)
+            input_32x4[i] = vld1q_f32(input+i*4);
+        
+        for(int i = 0; i < 4 ; i++)
+            output_32x4[i] = vmulq_f32(input_32x4[i],m_32x4);
+        
+        for(int i = 0; i < 4 ; i++)
+            output_32x4[i] = vaddq_f32(output_32x4[i],c_32x4);
+        
+        for(int i = 0; i < 4 ; i++)
+            vst1q_f32(output+i*4,output_32x4[i]);
 
         input+=16;
         output+=16;
@@ -73,37 +65,38 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
 
     // 8 Elements in Loop
     while(size >= 8){
-        input_32x4[0] = vld1q_f32(input);
-        input_32x4[1] = vld1q_f32(input+4);
+        for(int i = 0; i < 2 ; i++)
+            input_32x4[i] = vld1q_f32(input+i*4);
         
-        output_32x4[0] = vmulq_f32(input_32x4[0],m_32x4);
-        output_32x4[1] = vmulq_f32(input_32x4[1],m_32x4);
+        for(int i = 0; i < 2 ; i++)
+            output_32x4[i] = vmulq_f32(input_32x4[i],m_32x4);
         
-        output_32x4[0] = vaddq_f32(output_32x4[0],m_32x4);
-        output_32x4[1] = vaddq_f32(output_32x4[1],m_32x4);
+        for(int i = 0; i < 2 ; i++)
+            output_32x4[i] = vaddq_f32(output_32x4[i],c_32x4);
         
-        vst1q_f32(output,output_32x4[0]);
-        vst1q_f32(output+4,output_32x4[1]);
+        for(int i = 0; i < 2 ; i++)
+            vst1q_f32(output+i*4,output_32x4[i]);
         
         input+=8;
         output+=8;
         size-=8;        
     }
-
+    // 4 Elements in Loop
     while(size >= 4){
+        // Load pX[] 4 elements  pY[i] = pX[i]*M + C;
         input_32x4[0] = vld1q_f32(input);       
-
+        // Multipication of 4 elemetns pX[i]*M
         output_32x4[0] = vmulq_f32(input_32x4[0],m_32x4);
-
-        output_32x4[0] = vaddq_f32(output_32x4[0],m_32x4);        
-
+        // Addition of 4 elements pX[i]*M + C
+        output_32x4[0] = vaddq_f32(output_32x4[0],c_32x4);        
+        // Storing  pY[] 4 elements 
         vst1q_f32(output,output_32x4[0]);
 
         input+=4;
         output+=4;
         size-=4;        
     }
-
+    // Remainder elements
     while(size>0){
         int i = 0;
         for(i = size; i >= 0; i--){
