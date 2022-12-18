@@ -18,7 +18,12 @@ if(NEON)
         set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3 -DARM_NEON=1 -march=armv8.1-a+simd")
     endif()    
 else()
-    set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3")
+    #set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3")
+    if(ARMHF) 
+        set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3 -mfloat-abi=softfp -march=armv7-a+neon")
+    else()
+        set(CMAKE_CXX_FLAGS "-save-temps -ftree-vectorize -O3 -march=armv8.1-a+simd")
+    endif()    
 endif()
     
 # project name and language

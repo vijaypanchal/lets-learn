@@ -23,6 +23,8 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
     float32x4_t output_32x4[8];
     float32x4_t m_32x4 = vld1q_dup_f32(pM);
     float32x4_t c_32x4 = vld1q_dup_f32(pC);
+    float32x2_t m_32x2 = vld1_dup_f32(pM);
+    float32x2_t c_32x2 = vld1_dup_f32(pC);
 
     // 32 Elements in Loop
     while(size >= 32){
@@ -96,12 +98,21 @@ void lib_process_api_intrinsics(float* pX, float* pM, float* pC, float* pY, int 
         output+=4;
         size-=4;        
     }
-    // Remainder elements
-    while(size>0){
-        int i = 0;
-        for(i = size; i >= 0; i--){
-            pY[len-i] = pX[len-i]*M + C;
-        }    
-    }
+
+    // 2 Elements in Loop
+    while(size >= 2){
+        // Load pX[] 2 elements  pY[i] = pX[i]*M + C;
+        float32x2_t input_32x2 = vld1_f32(input);       
+        // Multipication of 2 elemetns pX[i]*M
+        float32x2_t output_32x2 = vmul_f32(input_32x2,m_32x2);
+        // Addition of 2 elements pX[i]*M + C
+        output_32x2 = vadd_f32(output_32x2,c_32x2);        
+        // Storing  pY[] 2 elements 
+        vst1_f32(output,output_32x2);
+
+        input+=2;
+        output+=2;
+        size-=2;        
+    }   
 }
 #endif
