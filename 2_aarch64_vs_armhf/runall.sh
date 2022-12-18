@@ -12,7 +12,8 @@ echo "Running with Neon..."
 echo "For ARCH Aarch64 : "
 ./build-aarch64-neon/main
 echo ""
+echo "-------------------------"
 echo "For ARCH Armhf : "
 ./build-armhf-neon/main
 echo ""
-echo "-------------------------"
+

@@ -14,7 +14,7 @@ long int GetMicrosecondCount()
 }
 
 #define DATA_SIZE 32768
-#define PROC_LOOP 10 * 1000
+#define PROC_LOOP 32768
 
 #define DATA_RANGE_MAX 1000.0f
 #define DATA_RANGE_MIN -1000.0f
@@ -28,6 +28,7 @@ int main()
 {
     srand(time(0));
     int size = DATA_SIZE;
+    volatile int loop;
     for (size = 2; size <= DATA_SIZE; size = size * 2)
     {
         float *input = new float[size]{0};
@@ -43,7 +44,7 @@ int main()
         }
 
         clock_t start = clock();
-        for (int i = 0; i < PROC_LOOP; i++)
+        for (loop = 0; loop < PROC_LOOP; loop++)
         {
             lib_process_api_c(input, &slope, &constant, output, size);
         }
@@ -54,7 +55,7 @@ int main()
 
 #if ARM_NEON == 1
         clock_t start_i = clock();
-        for (int i = 0; i < PROC_LOOP; i++)
+        for (loop = 0; loop < PROC_LOOP; loop++)
         {
             lib_process_api_intrinsics(input, &slope, &constant, output_i, size);
         }
